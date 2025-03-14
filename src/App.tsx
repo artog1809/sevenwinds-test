@@ -1,10 +1,12 @@
-import './App.css'
+import Header from './layout/Header/Header'
+import Sidebar from './layout/Sidebar/Sidebar'
 
 function App() {
 
   return (
     <>
-      
+      <Header />
+      <Sidebar />
     </>
   )
 }

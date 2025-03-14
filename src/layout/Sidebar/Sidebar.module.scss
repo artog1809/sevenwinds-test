@@ -1,0 +1,45 @@
+@import '../../styles/globals.scss';
+
+
+.sidebar {
+    height: calc(100vh - 40px);
+    width: 234px;
+    background-color: $secondary-background;
+    color: $primary-color;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar_top {
+    border: 1px solid $secondary-color;
+    border-top: none;
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: $secondary-color;
+    font-size: $font-m;
+}
+
+.name {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.name_bot{
+    font-size: $font-s;   
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+}
+
+.list_elem {
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: $font-m;
+}

@@ -1,0 +1,37 @@
+@import '../../styles/globals.scss';
+
+.header { 
+    height: 45px;
+    display: flex;
+    display: flex;
+    align-items: center;
+    background-color: $secondary-background;
+    color: $primary-color;
+    gap: 10px;
+    font-size: $font-m;
+    border-bottom: 1px solid $secondary-color;
+}
+
+.actions {
+    padding: 10px 20px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.views {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.active_view {
+    padding: 15px 0px;
+    border-bottom: 1px solid $primary-color;
+}
+
+.view {
+    color: $secondary-color;
+    border-bottom: 1px solid transparent;
+    cursor: pointer;
+}
