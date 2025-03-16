@@ -8,10 +8,10 @@ interface TreeNodeProps {
   level: number;
   add: (id: number) => void;
   del: (id: number) => void;
-  edit: (id: number, column: string, value: string) => void;  // Modified to accept column name and value
+  edit: (id: number, column: string, value: string) => void;  
   save: (id: number) => void;
   editingNodeId: number | null;
-  editingColumn: string | null;  // Keep track of which column is being edited
+  editingColumn: string | null;  
   inputValue: string;
   inputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   inputKeyDown: (e: React.KeyboardEvent<HTMLInputElement>, id: number) => void;
@@ -33,7 +33,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
   const [isHovered, setIsHovered] = useState(false);
 
   const handleEdit = (id: number, column: string, value: string) => {
-    edit(id, column, value);  // Edit now takes column name and value
+    edit(id, column, value);  
   };
 
   return (
@@ -65,7 +65,6 @@ const TreeNode: React.FC<TreeNodeProps> = ({
           )}
         </div>
 
-        {/* Editable column logic */}
         {editingNodeId === node.id && editingColumn === 'rowName' ? (
           <input
             className={styles.main_content_row_input}
@@ -76,7 +75,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
           />
         ) : (
           <span
-            onClick={() => handleEdit(node.id, 'rowName', node.rowName)}  // Editable for rowName
+            onClick={() => handleEdit(node.id, 'rowName', node.rowName)}  
             className={styles.main_content_row_title}
           >
             {node.rowName}
@@ -93,7 +92,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
           />
         ) : (
           <span
-            onClick={() => handleEdit(node.id, 'salary', String(node.salary))}  // Editable for salary
+            onClick={() => handleEdit(node.id, 'salary', String(node.salary))}  
             className={styles.main_content_row_title}
           >
             {node.salary}
@@ -110,7 +109,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
           />
         ) : (
           <span
-            onClick={() => handleEdit(node.id, 'equipmentCosts', String(node.equipmentCosts))}  // Editable for equipmentCosts
+            onClick={() => handleEdit(node.id, 'equipmentCosts', String(node.equipmentCosts))}  
             className={styles.main_content_row_title}
           >
             {node.equipmentCosts}
@@ -127,7 +126,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
           />
         ) : (
           <span
-            onClick={() => handleEdit(node.id, 'overheads', String(node.overheads))}  // Editable for overheads
+            onClick={() => handleEdit(node.id, 'overheads', String(node.overheads))}  
             className={styles.main_content_row_title}
           >
             {node.overheads}
@@ -144,7 +143,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
           />
         ) : (
           <span
-            onClick={() => handleEdit(node.id, 'estimatedProfit', String(node.estimatedProfit))}  // Editable for estimatedProfit
+            onClick={() => handleEdit(node.id, 'estimatedProfit', String(node.estimatedProfit))}  
             className={styles.main_content_row_title}
           >
             {node.estimatedProfit}

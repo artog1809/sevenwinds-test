@@ -27,10 +27,8 @@ const Main: FC = () => {
     const [inputValue, setInputValue] = useState<string>('');
     const [tree, setTree] = useState<Row[]>([]);
 
-    console.log(tree)
     const addNode = useCallback(async (rows: Row[], parentId: number | null): Promise<Row[]> => {
         const updatedRows = await Promise.all(rows.map(async (row) => {
-            console.log(row, parentId);
             if (row.id === parentId) {
                 const newId = Date.now();
                 const newNode: Row = {
@@ -64,7 +62,6 @@ const Main: FC = () => {
         return updatedRows;
     }, []);
     
-
     const deleteNode = useCallback((rows: Row[], nodeId: number): Row[] => {
         return rows
             .filter((row) => row.id !== nodeId)
@@ -79,7 +76,6 @@ const Main: FC = () => {
         setTree(updatedTree); 
     };
     
-
     const del = async (id: number) => {
         await deleteRow({id: id})
         setTree((prevTree) => deleteNode(prevTree, id));
@@ -91,16 +87,13 @@ const Main: FC = () => {
         setInputValue(value);
     };
     
-
     const save = (id: number) => {
         const updateNode = (rows: Row[]): Row[] =>
           rows.map((row) => {
             if (row.id === id) {
               const updatedRow = { ...row, [editingColumn]: inputValue };
-              
               update(updatedRow);
-              
-              return updatedRow;  // Return updated row with the modified value
+              return updatedRow;  
             } else if (row.child.length) {
               return { ...row, child: updateNode(row.child) };
             }
@@ -109,7 +102,7 @@ const Main: FC = () => {
       
         setTree((prevTree) => updateNode(prevTree));
         setEditingNodeId(null);
-        setEditingColumn('');  // Reset the column being edited
+        setEditingColumn('');  
       };
       
 
