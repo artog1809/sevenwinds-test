@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, FC, ChangeEvent, KeyboardEvent
 import styles from './Main.module.scss';
 import { Column } from '../Tree/types'; 
 import Tree from '../Tree/Tree';
-import { useCreateRowMutation, useGetRowListQuery, useUpdateRowMutation } from '../../features/row/api';
+import { useCreateRowMutation, useDeleteRowMutation, useGetRowListQuery, useUpdateRowMutation } from '../../features/row/api';
 import { Row } from '../../features/row/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
@@ -21,6 +21,7 @@ const Main: FC = () => {
     const { rowList } = useSelector((state: RootState) => state.row);
     const [create] = useCreateRowMutation();
     const [update] = useUpdateRowMutation();
+    const [deleteRow] = useDeleteRowMutation();
     const [editingNodeId, setEditingNodeId] = useState<number | null>(null);
     const [editingColumn, setEditingColumn] = useState<string>('')
     const [inputValue, setInputValue] = useState<string>('');
@@ -68,8 +69,8 @@ const Main: FC = () => {
         return rows
             .filter((row) => row.id !== nodeId)
             .map((row) => ({
-            ...row,
-            child: deleteNode(row.child, nodeId),
+                ...row,
+                child: deleteNode(row.child, nodeId),
             }));
     }, []);
 
@@ -79,13 +80,14 @@ const Main: FC = () => {
     };
     
 
-    const del = (id: number) => {
+    const del = async (id: number) => {
+        await deleteRow({id: id})
         setTree((prevTree) => deleteNode(prevTree, id));
     };
 
     const edit = (id: number, column: string, value: string) => {
         setEditingNodeId(id);
-        setEditingColumn(column);  // Set the column being edited
+        setEditingColumn(column);  
         setInputValue(value);
     };
     

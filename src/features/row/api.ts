@@ -46,8 +46,21 @@ export const rowApi = createApi({
                     console.error('ERROR', error);
                 }
             }
-         })
+        }),
+        deleteRow: builder.mutation<void, {id: number}>({
+            query: ({id}) => ({
+                url: `/v1/outlay-rows/entity/${eID}/row/${id}/delete`,
+                method: 'DELETE'
+            }),
+            async onQueryStarted(arg, { queryFulfilled }) {
+                try {
+                    await queryFulfilled;
+                } catch (error) {
+                    console.error('ERROR', error);
+                }
+            }
+        })
     })
 })
 
-export const { useGetRowListQuery, useCreateRowMutation, useUpdateRowMutation} = rowApi
+export const { useGetRowListQuery, useCreateRowMutation, useUpdateRowMutation, useDeleteRowMutation } = rowApi
