@@ -30,10 +30,9 @@ const Main: FC = () => {
     const addNode = useCallback(async (rows: Row[], parentId: number | null): Promise<Row[]> => {
         const updatedRows = await Promise.all(rows.map(async (row) => {
             if (row.id === parentId) {
-                const newId = Date.now();
                 const newNode: Row = {
-                    id: newId,
-                    rowName: `Новый элемент ${newId}`,
+                    id: Date.now(),
+                    rowName: ``,
                     child: [],
                     salary: 0,
                     equipmentCosts: 0,
@@ -46,7 +45,11 @@ const Main: FC = () => {
                     supportCosts: 0,
                     machineOperatorSalary: 0,
                 };
-                await create(newNode);
+
+                setEditingNodeId(newNode.id)
+                setEditingColumn('rowName')
+                setInputValue('')
+
                 return {
                     ...row,
                     child: [...row.child, newNode],
@@ -89,22 +92,27 @@ const Main: FC = () => {
     
     const save = (id: number) => {
         const updateNode = (rows: Row[]): Row[] =>
-          rows.map((row) => {
-            if (row.id === id) {
-              const updatedRow = { ...row, [editingColumn]: inputValue };
-              update(updatedRow);
-              return updatedRow;  
-            } else if (row.child.length) {
-              return { ...row, child: updateNode(row.child) };
-            }
-            return row;
-          });
-      
-        setTree((prevTree) => updateNode(prevTree));
-        setEditingNodeId(null);
-        setEditingColumn('');  
-      };
-      
+            rows.map((row) => {
+                if (row.id === id) {
+                    const updatedRow = { ...row, [editingColumn]: inputValue };
+                    if (row.rowName === '') {
+                        create(updatedRow);
+                    } else if (row.rowName !== '') {
+                        update(updatedRow); 
+                    }
+    
+                    return updatedRow;
+                } else if (row.child.length) {
+                    return { ...row, child: updateNode(row.child) }; 
+                }
+                return row;
+            });
+    
+        setTree((prevTree) => updateNode(prevTree)); 
+        setEditingNodeId(null); 
+        setEditingColumn('');
+    };
+    
 
     const inputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.target.value);
@@ -118,9 +126,9 @@ const Main: FC = () => {
 
     useEffect(() => {
         if (rowList.length === 0) {
-            const defaultTreeNode: Row = {
+          const defaultTreeNode: Row = {
             id: Date.now(),
-            rowName: '',
+            rowName: '', 
             child: [],
             salary: 0,
             equipmentCosts: 0,
@@ -132,12 +140,16 @@ const Main: FC = () => {
             parentId: null,
             supportCosts: 0,
             machineOperatorSalary: 0,
-            };
-            setTree([defaultTreeNode]);  
+          };
+          setTree([defaultTreeNode]); 
+          setEditingNodeId(defaultTreeNode.id); 
+          setEditingColumn('rowName');
+          setInputValue(''); 
         } else {
-            setTree(rowList);  
+          setTree(rowList);     
         }
     }, [rowList]);
+
 
     if (isLoading) {
     return <div>Loading...</div>;
