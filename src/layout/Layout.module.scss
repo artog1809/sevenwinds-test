@@ -1,0 +1,11 @@
+@import '../styles/globals.scss';
+
+.layout {
+
+}
+
+.main_content {
+    width: 100%;
+    background-color: $primary-background;
+    display: flex;
+}

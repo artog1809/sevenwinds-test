@@ -1,13 +1,10 @@
-import Header from './layout/Header/Header'
-import Sidebar from './layout/Sidebar/Sidebar'
+import Main from "./components/Main/Main"
+import Layout from "./layout/Layout"
 
 function App() {
 
   return (
-    <>
-      <Header />
-      <Sidebar />
-    </>
+    <Layout children={<Main />}/>
   )
 }
 

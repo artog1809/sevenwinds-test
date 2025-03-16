@@ -1,0 +1,33 @@
+@import '../../styles/globals.scss';
+
+.main_content_row {
+    font-size: $font-m;
+    grid-template-columns: 1fr 4fr 1fr 1fr 1fr 1fr;
+    display: grid;
+    color: $primary-color;
+    padding: 12px 20px;
+    border-bottom: 1px solid $secondary-color;
+}
+
+.main_content_row_title {
+    cursor: pointer;
+}
+
+.main_content_row_input {
+    flex: 1;
+    padding: 4px;
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #555;
+    border-radius: 4px;
+}
+
+.main_content_row_actions {
+    display: flex;
+    gap: 8px;
+}
+
+.main_content_row_btn {
+    background: none;
+    cursor: pointer;
+}

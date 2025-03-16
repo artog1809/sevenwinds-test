@@ -1,0 +1,35 @@
+@import '../../styles/globals.scss';
+
+.main { 
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.main_top { 
+    background-color: $secondary-background;
+    border-bottom: 1px solid $secondary-color;
+    padding: 13px 0px;
+
+    span {
+        color: $primary-color;
+        font-size: $font-l;
+        padding: 13px 16px;
+        border-right: 1px solid $secondary-color;
+    }
+}
+
+.main_content {
+    padding: 10px;
+}
+
+.main_content_head {
+    color: $secondary-color;
+    padding: 0px 12px 12px;
+    border-bottom: 1px solid $secondary-color;
+    font-size: $font-m;
+    grid-template-columns: 1fr 4fr 1fr 1fr 1fr 1fr;
+    display: grid;
+}
+
+
