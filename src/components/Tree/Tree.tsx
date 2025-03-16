@@ -6,9 +6,10 @@ interface TreeProps {
   rows: Row[]
   add: (id: number) => void
   del: (id: number) => void
-  edit: (id: number, name: string) => void
+  edit: (id: number, column: string, value: string) => void;
   save: (id: number) => void
-  editingNodeId: number | null
+  editingNodeId: number | null;
+  editingColumn: string | null;
   inputValue: string
   inputChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   inputKeyDown: (e: React.KeyboardEvent<HTMLInputElement>, id: number) => void
@@ -24,6 +25,7 @@ const Tree: React.FC<TreeProps> = ({
   inputValue,
   inputChange,
   inputKeyDown,
+  editingColumn
 }) => {
   const renderTree = (nodes: Row[], level = 0) => {
     return nodes.map((node) => (
@@ -34,6 +36,7 @@ const Tree: React.FC<TreeProps> = ({
         add={add}
         del={del}
         edit={edit}
+        editingColumn={editingColumn}
         save={save}
         editingNodeId={editingNodeId}
         inputValue={inputValue}

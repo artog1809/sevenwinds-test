@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback, FC, ChangeEvent, KeyboardEvent } from 'react';
 import styles from './Main.module.scss';
-import { Column } from '../Tree/types'; // Здесь теперь не нужен тип TreeNode, только Column
+import { Column } from '../Tree/types'; 
 import Tree from '../Tree/Tree';
-import { useCreateRowMutation, useGetRowListQuery } from '../../features/row/api';
+import { useCreateRowMutation, useGetRowListQuery, useUpdateRowMutation } from '../../features/row/api';
 import { Row } from '../../features/row/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
@@ -20,10 +20,13 @@ const Main: FC = () => {
     const { isLoading, isError } = useGetRowListQuery();
     const { rowList } = useSelector((state: RootState) => state.row);
     const [create] = useCreateRowMutation();
+    const [update] = useUpdateRowMutation();
     const [editingNodeId, setEditingNodeId] = useState<number | null>(null);
+    const [editingColumn, setEditingColumn] = useState<string>('')
     const [inputValue, setInputValue] = useState<string>('');
     const [tree, setTree] = useState<Row[]>([]);
 
+    console.log(tree)
     const addNode = useCallback(async (rows: Row[], parentId: number | null): Promise<Row[]> => {
         const updatedRows = await Promise.all(rows.map(async (row) => {
             console.log(row, parentId);
@@ -80,25 +83,33 @@ const Main: FC = () => {
         setTree((prevTree) => deleteNode(prevTree, id));
     };
 
-    const edit = (id: number, name: string) => {
+    const edit = (id: number, column: string, value: string) => {
         setEditingNodeId(id);
-        setInputValue(name);
+        setEditingColumn(column);  // Set the column being edited
+        setInputValue(value);
     };
+    
 
     const save = (id: number) => {
-        const updateName = (rows: Row[]): Row[] =>
-            rows.map((row) => {
+        const updateNode = (rows: Row[]): Row[] =>
+          rows.map((row) => {
             if (row.id === id) {
-                return { ...row, rowName: inputValue };
+              const updatedRow = { ...row, [editingColumn]: inputValue };
+              
+              update(updatedRow);
+              
+              return updatedRow;  // Return updated row with the modified value
             } else if (row.child.length) {
-                return { ...row, child: updateName(row.child) };
+              return { ...row, child: updateNode(row.child) };
             }
-        return row;
-        });
-
-        setTree((prevTree) => updateName(prevTree));
+            return row;
+          });
+      
+        setTree((prevTree) => updateNode(prevTree));
         setEditingNodeId(null);
-    };
+        setEditingColumn('');  // Reset the column being edited
+      };
+      
 
     const inputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.target.value);
@@ -155,11 +166,12 @@ const Main: FC = () => {
         </div>
 
         <Tree
-            rows={tree}  // Используем tree, которое либо пустое, либо с данными из rowList
+            rows={tree}  
             add={add}
             del={del}
             edit={edit}
             save={save}
+            editingColumn={editingColumn}
             editingNodeId={editingNodeId}
             inputValue={inputValue}
             inputChange={inputChange}

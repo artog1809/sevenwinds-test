@@ -19,7 +19,7 @@ export const rowApi = createApi({
                 }
               },
         }),
-        createRow: builder.mutation<{current: Row}, Row >({
+        createRow: builder.mutation<{current: Row}, Row>({
             query: (credentials) => ({
                 url: `/v1/outlay-rows/entity/${eID}/row/create`,
                 method: 'POST',
@@ -28,12 +28,26 @@ export const rowApi = createApi({
             async onQueryStarted(arg, { queryFulfilled }) {
                 try {
                     await queryFulfilled;
-                  } catch (error) {
+                } catch (error) {
                     console.error('ERROR', error);
-                  }
+                }
             }
-        })
+        }),
+        updateRow: builder.mutation<{current: Row}, Row>({
+            query: (credentials) => ({
+                url: `/v1/outlay-rows/entity/${eID}/row/${credentials.id}/update`,
+                method: 'POST',
+                body: credentials
+            }),
+            async onQueryStarted(arg, { queryFulfilled }) {
+                try {
+                    await queryFulfilled;
+                } catch (error) {
+                    console.error('ERROR', error);
+                }
+            }
+         })
     })
 })
 
-export const { useGetRowListQuery, useCreateRowMutation } = rowApi
+export const { useGetRowListQuery, useCreateRowMutation, useUpdateRowMutation} = rowApi
