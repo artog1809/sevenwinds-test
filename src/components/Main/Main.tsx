@@ -1,7 +1,11 @@
 import React, { useState, useCallback, FC, ChangeEvent, KeyboardEvent } from 'react'
 import styles from './Main.module.scss'
-import { Column, TreeNode } from '../Tree/types'
+import { Column } from '../Tree/types' // Здесь теперь не нужен тип TreeNode, только Column
 import Tree from '../Tree/Tree'
+import { useGetRowListQuery } from '../../features/row/api'
+import { Row } from '../../features/row/types'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../store'
 
 const cols: Column[] = [
   { id: 0, title: 'Уровень' },
@@ -12,57 +16,72 @@ const cols: Column[] = [
   { id: 5, title: 'Сметная прибыль' },
 ]
 
-const initialTree: TreeNode[] = [
-  {
-    id: 1,
-    name: 'Южная строительная площадка',
-    children: [
-      {
-        id: 2,
-        name: 'Фундаментальные работы',
-        children: [
-          { id: 3, name: 'Статья работы № 1', children: [] },
-          { id: 4, name: 'Статья работы № 2', children: [] },
-        ],
-      },
-    ],
-  },
-]
+const initialTree: Row[] = [
+    {
+      id: 1,
+      rowName: 'Root Node',
+      child: [],
+      salary: 0,
+      equipmentCosts: 0,
+      estimatedProfit: 0,
+      mainCosts: 0,
+      materials: 0,
+      mimExploitation: 0,
+      overheads: 0,
+      parentId: null,
+      supportCosts: 0,
+      machineOperatorSalary: 0,
+    },
+  ];
+
 
 const Main: FC = () => {
-  const [tree, setTree] = useState<TreeNode[]>(initialTree)
+  const {isLoading, isError } = useGetRowListQuery()
+  const { rowList } = useSelector((state: RootState) => state.row)
   const [editingNodeId, setEditingNodeId] = useState<number | null>(null)
   const [inputValue, setInputValue] = useState<string>('')
+  const [tree, setTree] = useState(initialTree);
 
-  const addNode = useCallback((nodes: TreeNode[], parentId: number): TreeNode[] => {
-    return nodes.map((node) => {
-      if (node.id === parentId) {
-        const newId = Date.now()
-        const newNode: TreeNode = {
+  const addNode = useCallback((rows: Row[], parentId: number | null): Row[] => {
+    return rows.map((row) => {
+      if (row.id === parentId) {
+        const newId = Date.now();
+        const newNode: Row = {  
           id: newId,
-          name: `Новый элемент ${newId}`,
-          children: [],
-        }
+          rowName: `Новый элемент ${newId}`,
+          child: [],  
+          salary: 0,
+          equipmentCosts: 0,
+          estimatedProfit: 0,
+          mainCosts: 0,
+          materials: 0,
+          mimExploitation: 0,
+          overheads: 0,
+          parentId: parentId,
+          supportCosts: 0,
+          machineOperatorSalary: 0,
+        };
         return {
-          ...node,
-          children: [...node.children, newNode],
-        }
-      } else if (node.children.length) {
+          ...row,
+          child: [...row.child, newNode],  
+        };
+      } else if (row.child.length) {
         return {
-          ...node,
-          children: addNode(node.children, parentId),
-        }
+          ...row,
+          child: addNode(row.child, parentId),  
+        };
       }
-      return node
-    })
-  }, [])
-
-  const deleteNode = useCallback((nodes: TreeNode[], nodeId: number): TreeNode[] => {
-    return nodes
-      .filter((node) => node.id !== nodeId)
-      .map((node) => ({
-        ...node,
-        children: deleteNode(node.children, nodeId),
+      return row;
+    });
+  }, []);
+  
+  
+  const deleteNode = useCallback((rows: Row[], nodeId: number): Row[] => {
+    return rows
+      .filter((row) => row.id !== nodeId)
+      .map((row) => ({
+        ...row,
+        child: deleteNode(row.child, nodeId),
       }))
   }, [])
 
@@ -80,14 +99,14 @@ const Main: FC = () => {
   }
 
   const save = (id: number) => {
-    const updateName = (nodes: TreeNode[]): TreeNode[] =>
-      nodes.map((node) => {
-        if (node.id === id) {
-          return { ...node, name: inputValue }
-        } else if (node.children.length) {
-          return { ...node, children: updateName(node.children) }
+    const updateName = (rows: Row[]): Row[] =>
+      rows.map((row) => {
+        if (row.id === id) {
+          return { ...row, rowName: inputValue }
+        } else if (row.child.length) {
+          return { ...row, child: updateName(row.child) }
         }
-        return node
+        return row
       })
 
     setTree((prevTree) => updateName(prevTree))
@@ -104,6 +123,14 @@ const Main: FC = () => {
     }
   }
 
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (isError) {
+    return <div>Error loading data</div>
+  }
+
   return (
     <div className={styles.main}>
       <div className={styles.main_top}>
@@ -118,15 +145,15 @@ const Main: FC = () => {
         </div>
 
         <Tree
-            nodes={tree}
-            add={add}
-            del={del}
-            edit={edit}
-            save={save}
-            editingNodeId={editingNodeId}
-            inputValue={inputValue}
-            inputChange={inputChange}
-            inputKeyDown={inputKeyDown}
+          rows={rowList}  
+          add={add}
+          del={del}
+          edit={edit}
+          save={save}
+          editingNodeId={editingNodeId}
+          inputValue={inputValue}
+          inputChange={inputChange}
+          inputKeyDown={inputKeyDown}
         />
       </div>
     </div>

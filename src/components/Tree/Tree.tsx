@@ -1,9 +1,9 @@
 import React from 'react'
-import { TreeNode as TreeNodeType } from './types'
 import TreeNode from './TreeNode'
+import { Row } from '../../features/row/types'
 
 interface TreeProps {
-  nodes: TreeNodeType[]
+  rows: Row[]
   add: (id: number) => void
   del: (id: number) => void
   edit: (id: number, name: string) => void
@@ -15,7 +15,7 @@ interface TreeProps {
 }
 
 const Tree: React.FC<TreeProps> = ({
-  nodes,
+  rows,
   add,
   del,
   edit,
@@ -25,7 +25,7 @@ const Tree: React.FC<TreeProps> = ({
   inputChange,
   inputKeyDown,
 }) => {
-  const renderTree = (nodes: TreeNodeType[], level = 0) => {
+  const renderTree = (nodes: Row[], level = 0) => {
     return nodes.map((node) => (
       <TreeNode
         key={node.id}
@@ -43,7 +43,7 @@ const Tree: React.FC<TreeProps> = ({
     ))
   }
 
-  return <>{renderTree(nodes)}</>
+  return <>{renderTree(rows)}</>
 }
 
 export default Tree

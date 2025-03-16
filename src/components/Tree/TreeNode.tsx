@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { File, Plus, Trash2 } from 'lucide-react'
-import { TreeNode as TreeNodeType } from './types'
 import styles from './Tree.module.scss'
+import { Row } from '../../features/row/types'
 
 interface TreeNodeProps {
-  node: TreeNodeType
+  node: Row
   level: number
   add: (id: number) => void
   del: (id: number) => void
@@ -71,10 +71,10 @@ const TreeNode: React.FC<TreeNodeProps> = ({
           />
         ) : (
           <span
-            onClick={() => edit(node.id, node.name)}
+            onClick={() => edit(node.id, node.rowName)}
             className={styles.main_content_row_title}
           >
-            {node.name}
+            {node.rowName}
           </span>
         )}
 
@@ -84,11 +84,11 @@ const TreeNode: React.FC<TreeNodeProps> = ({
         <span>—</span>
       </div>
 
-      {node.children && node.children.length > 0 && (
-        node.children.map((child) => (
+      {node.child && node.child.length > 0 && (
+        node.child.map((el) => (
           <TreeNode
-            key={child.id}
-            node={child}
+            key={el.id}
+            node={el}
             level={level + 1}
             add={add}
             del={del}
