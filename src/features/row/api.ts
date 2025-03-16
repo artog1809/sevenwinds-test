@@ -18,8 +18,22 @@ export const rowApi = createApi({
                   console.error('ERROR', error);
                 }
               },
+        }),
+        createRow: builder.mutation<{current: Row}, Row >({
+            query: (credentials) => ({
+                url: `/v1/outlay-rows/entity/${eID}/row/create`,
+                method: 'POST',
+                body: credentials
+            }),
+            async onQueryStarted(arg, { queryFulfilled }) {
+                try {
+                    await queryFulfilled;
+                  } catch (error) {
+                    console.error('ERROR', error);
+                  }
+            }
         })
     })
 })
 
-export const { useGetRowListQuery } = rowApi
+export const { useGetRowListQuery, useCreateRowMutation } = rowApi

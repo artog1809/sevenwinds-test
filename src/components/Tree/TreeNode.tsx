@@ -46,14 +46,12 @@ const TreeNode: React.FC<TreeNodeProps> = ({
               <button
                 onClick={() => add(node.id)}
                 className={styles.main_content_row_btn}
-                title="Добавить"
               >
                 <Plus size={16} />
               </button>
               <button
                 onClick={() => del(node.id)}
                 className={styles.main_content_row_btn}
-                title="Удалить"
               >
                 <Trash2 size={16} />
               </button>
@@ -78,10 +76,10 @@ const TreeNode: React.FC<TreeNodeProps> = ({
           </span>
         )}
 
-        <span>—</span>
-        <span>—</span>
-        <span>—</span>
-        <span>—</span>
+        <span>{node.salary}</span>
+        <span>{node.equipmentCosts}</span>
+        <span>{node.overheads}</span>
+        <span>{node.estimatedProfit}</span>
       </div>
 
       {node.child && node.child.length > 0 && (
